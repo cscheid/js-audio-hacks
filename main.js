@@ -82,8 +82,8 @@ d3.select("#buttons")
   });
 
 // player.debugWave(triangle(1), [0, 2]);
-player.debugWave(addWave(changedPhase(0.5, sawTooth(1)),
-                         sawTooth(1)), [0, 2]);
+// player.debugWave(addWave(changedPhase(0.5, sawTooth(1)),
+//                          sawTooth(1)), [0, 2]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // pppppp!
