@@ -81,9 +81,46 @@ d3.select("#buttons")
     player.playTrack(seq);
   });
 
-// player.debugWave(square(1), [0, 1]);
+// player.debugWave(triangle(1), [0, 2]);
+player.debugWave(addWave(changedPhase(0.5, sawTooth(1)),
+                         sawTooth(1)), [0, 2]);
 
-//   , "Triangle", "Sine", 
-// d3.select
+// player.playTrack(sequence[
 
-// player.playTrack(seq2);
+////////////////////////////////////////////////////////////////////////////////
+// pppppp
+
+function ppinst(key, duration)
+{
+  var baseWave = addWave(baseSawTooth.then(gain(0.05)),
+                         baseSquare.then(gain(0.95)));
+  var note = changeFreq(baseWave);
+  // var note = sawTooth;
+  
+  return baseTrack(
+    note(notes[key])
+      .then(gain(0.45))
+      .then(expFadeOutAt(0.09, 95))
+      .then(expFadeInAt(0, 200)),
+    duration);
+}
+
+var gb   = ppinst(24, 0.5);
+var gb_n = ppinst(36, 0.5);
+var cs_n = ppinst(29, 0.5);
+
+var quarter_note = 0.215;
+
+var d4 = quarter_note, d8 = quarter_note / 2;
+
+player.playTrack(seqDelays([
+  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4],
+  [gb_n, d8],  [cs_n, d8],  [gb, d4]
+]));

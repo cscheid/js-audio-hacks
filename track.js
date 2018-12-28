@@ -90,3 +90,13 @@ function overlappingSeq(tracks, wait)
 {
   return parallel(tracks.map((track,i) => delay(track, i * wait)));
 }
+
+function seqDelays(tracks)
+{
+  var wait = 0;
+  return parallel(tracks.map(track => {
+    var r = delay(track[0], wait);
+    wait += track[1];
+    return r;
+  }));
+}

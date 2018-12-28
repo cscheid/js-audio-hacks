@@ -63,9 +63,27 @@ function changedFreq(freq, f) {
   };
 }
 
+function changedPhase(phase, f) {
+  return function(sample) {
+    var result = f({ v: sample.v, t: sample.t + phase });
+    result.t = sample.t;
+    return result;
+  };
+}
+
 function changeFreq(f) {
   return freq => changedFreq(freq, f);
 }
+
+function addWave(f, g) {
+  return function(sample) {
+    var result1 = f(sample), result2 = g(sample);
+    result1.v += result2.v;
+    result1.t = sample.t;
+    return result1;
+  };
+}
+
 var sawTooth = changeFreq(baseSawTooth); 
 var inverseSawTooth = changeFreq(baseInverseSawTooth); 
 var sine = changeFreq(baseSine);
