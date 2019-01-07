@@ -11,10 +11,14 @@ fProto.then = function(g) {
   };
 };
 
+function silenceAt(t) {
+  return { v: 0, t: t, w: 1 };
+}
+
 function constant(k)
 {
   return function(sample) {
-    return { v: k, t: sample.t };
+    return { v: k, t: sample.t, w: 1 };
   };
 }
 
@@ -22,7 +26,7 @@ function constant(k)
 function baseSawTooth(sample)
 {
   var v = sample.t % 1;
-  return { v: v < 0 ? v + 1: v, t: sample.t };
+  return { v: v < 0 ? v + 1: v, t: sample.t, w: 1 };
 }
 
 function baseInverseSawTooth(sample)
@@ -30,13 +34,13 @@ function baseInverseSawTooth(sample)
   var v = sample.t % 1;
   v = v < 0 ? v + 1: v;
   v = 1.0 - v;
-  return { v: v, t: sample.t };
+  return { v: v, t: sample.t, w: 1 };
 }
 
 // sin(2 pi t) so that period is 1.
 function baseSine(sample)
 {
-  return { v: Math.sin(2 * Math.PI * sample.t), t: sample.t };
+  return { v: Math.sin(2 * Math.PI * sample.t), t: sample.t, w: 1 };
 }
 
 function baseTriangle(sample)
@@ -44,7 +48,7 @@ function baseTriangle(sample)
   var v = sample.t % 1;
   v = v < 0 ? v + 1 : v;
   v = Math.min(v, 1-v);
-  return { v: v, t: sample.t };
+  return { v: v, t: sample.t, w: 1 };
 }
 
 function baseSquare(sample)
@@ -52,12 +56,12 @@ function baseSquare(sample)
   var v = sample.t % 1;
   v = v < 0 ? v + 1 : v;
   v = v < 0.5 ? 1 : -1;
-  return { v: v, t: sample.t };
+  return { v: v, t: sample.t, w: 1 };
 }
 
 function changedFreq(freq, f) {
   return function(sample) {
-    var result = f({ v: sample.v, t: sample.t * freq });
+    var result = f({ v: sample.v, t: sample.t * freq, w: 1 });
     result.t = sample.t;
     return result;
   };
@@ -65,7 +69,7 @@ function changedFreq(freq, f) {
 
 function changedPhase(phase, f) {
   return function(sample) {
-    var result = f({ v: sample.v, t: sample.t + phase });
+    var result = f({ v: sample.v, t: sample.t + phase, w: 1 });
     result.t = sample.t;
     return result;
   };
@@ -80,6 +84,7 @@ function addWave(f, g) {
     var result1 = f(sample), result2 = g(sample);
     result1.v += result2.v;
     result1.t = sample.t;
+    result1.w += result2.w;
     return result1;
   };
 }
@@ -92,7 +97,7 @@ var triangle = changeFreq(baseTriangle);
 
 function gain(g) {
   return function(sample) {
-    return { v: sample.v * g, t: sample.t };
+    return { v: sample.v * g, t: sample.t, w: sample.w * g };
   };
 }
 
@@ -103,7 +108,7 @@ function expFadeInAt(t0, sharpness) {
   return function(sample) {
     var delta = sample.t - t0;
     var weight = delta < 0 ? 0.0 : (1.0 - Math.exp(- delta * sharpness));
-    return { v: sample.v * weight, t: sample.t };
+    return { v: sample.v * weight, t: sample.t, w: sample.w * weight };
   };
 };
 
@@ -111,7 +116,7 @@ function expFadeOutAt(t0, sharpness) {
   return function(sample) {
     var delta = t0 - sample.t;
     var weight = delta < 0 ? 0.0 : (1.0 - Math.exp(- delta * sharpness));
-    return { v: sample.v * weight, t: sample.t };
+    return { v: sample.v * weight, t: sample.t, w: sample.w * weight };
   };
 };
 
@@ -119,6 +124,6 @@ function expFadeOut2At(t0, sharpness) {
   return function(sample) {
     var delta = sample.t - t0;
     var weight = delta < 0 ? 1.0 : Math.exp(- delta * sharpness);
-    return { v: sample.v * weight, t: sample.t };
+    return { v: sample.v * weight, t: sample.t, w: sample.w * weight };
   };
 };

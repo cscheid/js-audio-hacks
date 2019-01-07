@@ -1,3 +1,5 @@
+/*global silenceAt */
+
 //////////////////////////////////////////////////////////////////////////////
 // tracks
 // a track has a beginning and an end time and can render its own samples with
@@ -28,22 +30,23 @@ function sequence(tracks)
     render: function(sample) {
       var ix = locate_track(sample);
       if (ix === -1) {
-        return { t: sample.t, v: 0.0 };
+        return silenceAt(sample.t);
       }
-      var shifted_sample = {
+      var inSample = {
         v: sample.v,
-        t: sample.t - track_offsets[ix] + track_origins[ix]
+        t: sample.t - track_offsets[ix] + track_origins[ix],
+        w: sample.w
       };
+      var outSample = tracks[ix].render(inSample);
       return {
-        v: tracks[ix].render(shifted_sample).v,
-        t: sample.t
+        v: inSample.v,
+        t: sample.t,
+        w: inSample.w
       };
     }
   };
 }
 
-// fixme: the averaging is done badly here,
-// parallel([[a,b], c]) != parallel([a, [b,c]])
 function parallel(tracks)
 {
   var min = Math.min.apply(null, tracks.map(track => track.window[0]));
@@ -51,11 +54,12 @@ function parallel(tracks)
   return {
     window: [min, max],
     render: function(sample) {
-      var result = { v: 0.0, t: sample.t };
+      var result = silenceAt(sample.t);
       for (var i=0; i<tracks.length; ++i) {
-        result.v += tracks[i].render(sample).v;
+        var outSample = tracks[i].render(sample);
+        result.v += outSample.v;
+        result.w += outSample.w;
       }
-      result.v /= tracks.length;
       return result;
     }
   };
@@ -67,7 +71,7 @@ function baseTrack(f, duration)
     window: [0, duration],
     render: function(sample) {
       if (sample.t < this.window[0] || sample.t > this.window[1]) {
-        return { v: 0, t: sample.t };
+        return silenceAt(sample.t);
       } else {
         return f(sample);
       }
@@ -80,7 +84,7 @@ function delay(track, amount)
   return {
     window: [track.window[0] + amount, track.window[1] + amount],
     render: function(sample) {
-      var this_sample = { v: sample.v, t: sample.t - amount };
+      var this_sample = { v: sample.v, t: sample.t - amount, w: sample.w };
       return track.render(this_sample);
     }
   };

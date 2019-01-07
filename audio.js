@@ -90,8 +90,13 @@ function makePlayer()
       var buffer = new Float32Array(bufferSize);
       
       for (var i=0; i<bufferSize; ++i) {
-        var sample = { t: sampleToTime(i) + window[0], v: 0.0 };
-        buffer[i] = f(sample).v;
+        var inSample = { t: sampleToTime(i) + window[0], v: 0.0, w: 1.0 };
+        var outSample = f(inSample);
+        if (outSample.w <= 1) {
+          buffer[i] = outSample.v;
+        } else {
+          buffer[i] = outSample.v / outSample.w;
+        }
       }
   
       return buffer;
@@ -137,6 +142,10 @@ function makePlayer()
         }
       };
       vegaEmbed(div, yourVlSpec);
+    },
+
+    start: function() {
+      ctx.resume();
     }
   };
 }

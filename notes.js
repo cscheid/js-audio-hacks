@@ -108,16 +108,16 @@ var notes = new Float32Array(109);
 noteDict.forEach(n => notes[n.number] = n.freq);
 
 baseKeyboard = {
-  "C": notes[40],
-  "Db": notes[41],
-  "D": notes[42],
-  "Eb": notes[43],
-  "E": notes[44],
-  "F": notes[45],
-  "Gb": notes[46],
-  "G": notes[47],
-  "Ab": notes[48],
-  "A": notes[49],
-  "Bb": notes[50],
-  "B": notes[51]
+  "C": 40,
+  "Db": 41,
+  "D": 42,
+  "Eb": 43,
+  "E": 44,
+  "F": 45,
+  "Gb": 46,
+  "G": 47,
+  "Ab": 48,
+  "A": 49,
+  "Bb": 50,
+  "B": 51
 };
