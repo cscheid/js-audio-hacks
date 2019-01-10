@@ -132,14 +132,28 @@ function makePlayer()
       var yourVlSpec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.0.0-rc10.json",
         "data": { "values": this.makeWaveSamples(waveFun, window) },
-        "mark": {
-          "type": "line",
-          "interpolate": "monotone"
-        },
-        "encoding": {
-          "x": {"field": "t", "type": "quantitative"},
-          "y": {"field": "v", "type": "quantitative"}
-        }
+        "layer": [
+          {
+            "mark": {
+              "type": "line",
+              "interpolate": "monotone"
+            },
+            "encoding": {
+              "x": {"field": "t", "type": "quantitative"},
+              "y": {"field": "v", "type": "quantitative"}
+            }
+          },
+          {
+            "mark": {
+              "type": "line",
+              "interpolate": "monotone"
+            },
+            "encoding": {
+              "x": {"field": "t", "type": "quantitative"},
+              "y": {"field": "w", "type": "quantitative"}
+            }
+          }
+        ],
       };
       vegaEmbed(div, yourVlSpec);
     },

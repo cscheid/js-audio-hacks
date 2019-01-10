@@ -98,45 +98,6 @@ d3.select("#buttons")
     player.playTrack(seq);
   });
 
-// our 'piano' has keyboard C mapping to piano C4;
-//                          X mapping to       B3;
-//                          F mapping to piano C#4;
-// etc
-var miniPianoKeys = {
-  "a": 36,
-  "z": 37,
-  "s": 38,
-  "x": 39,
-  "c": 40, // c
-  "f": 41,
-  "v": 42, // d
-  "g": 43,
-  "b": 44, // e
-  "n": 45, // f
-  "j": 46,
-  "m": 47,
-  "k": 48,
-  ",": 49,
-  "l": 50,
-  ".": 51,
-  "/": 52,
-  "'": 53
-};
-
-document.onkeydown = function(event) {
-  console.log(event);
-  var k = event.key.toLocaleLowerCase();
-  if (miniPianoKeys[k] === undefined)
-    return;
-  console.log("Found!", miniPianoKeys[k]);
-  var t = instrument2(miniPianoKeys[k]);
-  
-  player.playTrack(parallel([t]));
-};
-
-// player.debugWave(triangle(1), [0, 2]);
-// player.debugWave(addWave(changedPhase(0.5, sawTooth(1)),
-//                          sawTooth(1)), [0, 2]);
 d3.select("#songs")
   .selectAll("button")
   .data([{ "name": "pushing onwards", "fun": playPppppp },
@@ -147,5 +108,3 @@ d3.select("#songs")
   .on("click", d => d.fun() );
 
 ////////////////////////////////////////////////////////////////////////////////
-// pppppp!
-

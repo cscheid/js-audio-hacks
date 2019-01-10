@@ -12,7 +12,7 @@ fProto.then = function(g) {
 };
 
 function silenceAt(t) {
-  return { v: 0, t: t, w: 1 };
+  return { v: 0, t: t, w: 0 };
 }
 
 function constant(k)
