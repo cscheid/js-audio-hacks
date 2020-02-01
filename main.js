@@ -72,16 +72,7 @@ var buttons = [
   {name: "Triangle", instrument: instrument3},
   {name: "Square", instrument: instrument4},
   {name: "Sawtooth", instrument: instrument2},
-  // sounds the same as sawtooth
-  // {name: "Inverse Sawtooth", instrument: instrument5} 
 ];
-
-// d3.select("#start")
-//   .append("button")
-//   .text("Start Audio")
-//   .on("click", d => {
-//     player.start();
-//   });
 
 d3.select("#buttons")
   .selectAll("button")
@@ -108,3 +99,31 @@ d3.select("#songs")
   .on("click", d => d.fun() );
 
 ////////////////////////////////////////////////////////////////////////////////
+
+var weirdStuff = [
+  {
+    "name": "chirpChord",
+    "fun": d => player.playWave(
+      addWave(chirpT(200),
+              chirpT(200 * 1.41),
+              chirpT(400)).then(gain(0.05)),
+      [2, 2.5])
+  },
+  {
+    "name": "expChirpChord",
+    "fun": d => player.playWave(
+      addWave(expChirpT(10),
+              expChirpT(20),
+              expChirpT(40)).then(gain(0.05)),
+      [1, 3])
+  }
+];
+
+d3.select("#weird-stuff")
+  .selectAll("button")
+  .data(weirdStuff)
+  .enter()
+  .append("button")
+  .text( d => d.name )
+  .on("click", d => d.fun() );
+

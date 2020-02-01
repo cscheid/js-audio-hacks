@@ -27,3 +27,12 @@ principle at play or am I ignoring the differences between the two
 settings?
 
 
+
+## accidental chirp!
+
+A chord of increasing frequencies in time sounded very
+scifi-y. Nice.
+
+The exponential chirp, when not aliasing, sounds kinda like what
+Rush used in the beginning of 2112. When it starts aliasing (so past
+22KHz) it gets into Star Trek phasers territory. Fun.
