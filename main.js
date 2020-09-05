@@ -1,6 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////
 
-player = makePlayer();
+d3.select("#start")
+  .append("button")
+  .text("Start")
+  .on("click", () => {
+    player = makePlayer();
+  });
 
 function instrument1(key)
 {

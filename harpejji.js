@@ -50,66 +50,91 @@ var pianoKeys = [
 
 ];
 
+var baseOffset = 32;
+
 var miniHarpejjiKeys = {
-  "z": 36,
-  "x": 38,
-  "c": 40,
-  "v": 42,
-  "b": 44,
-  "n": 46,
-  "m": 48,
-  ",": 50,
-  ".": 52,
-  "/": 54,
+  "z": 0,
+  "x": 2,
+  "c": 4,
+  "v": 6,
+  "b": 8,
+  "n": 10,
+  "m": 12,
+  ",": 14,
+  ".": 16,
+  "/": 18,
 
-  "a": 37,
-  "s": 39,
-  "d": 41,
-  "f": 43,
-  "g": 45,
-  "h": 47,
-  "j": 49,
-  "k": 51,
-  "l": 53,
-  ";": 55,
-  "'": 57,
-  
-  "q": 38,
-  "w": 40,
-  "e": 42,
-  "r": 44,
-  "t": 46,
-  "y": 48,
-  "u": 50,
-  "i": 52,
-  "o": 54,
-  "p": 56,
-  "[": 58,
-  "]": 60,
+  "a": 1,
+  "s": 3,
+  "d": 5,
+  "f": 7,
+  "g": 9,
+  "h": 11,
+  "j": 13,
+  "k": 15,
+  "l": 17,
+  ";": 19,
+  "'": 21,
 
-  "`": 37,
-  "1": 39,
-  "2": 41,
-  "3": 43,
-  "4": 45,
-  "5": 47,
-  "6": 49,
-  "7": 51,
-  "8": 53,
-  "9": 55,
-  "0": 57,
-  "-": 59,
-  "=": 61,
+  "q": 2,
+  "w": 4,
+  "e": 6,
+  "r": 8,
+  "t": 10,
+  "y": 12,
+  "u": 14,
+  "i": 16,
+  "o": 18,
+  "p": 20,
+  "[": 22,
+  "]": 24,
+
+  "`": 1,
+  "1": 3,
+  "2": 5,
+  "3": 7,
+  "4": 9,
+  "5": 11,
+  "6": 13,
+  "7": 15,
+  "8": 17,
+  "9": 19,
+  "0": 21,
+  "-": 23,
+  "=": 25,
 };
 
 document.onkeydown = function(event) {
   var k = event.key.toLocaleLowerCase();
-  if (miniHarpejjiKeys[k] === undefined)
-    return;
-  var t = instrument3(miniHarpejjiKeys[k]);
-  player.playTrack(parallel([t]));
+  if (k.slice(0,5) === "arrow") {
+    let map = {
+      arrowright: 2,
+      arrowleft: -2,
+      arrowup: 1,
+      arrowdown: -1
+    };
+    baseOffset += map[k];
+    updateKeys();
+  } else if (miniHarpejjiKeys[k] !== undefined) {
+    var t = instrument3(miniHarpejjiKeys[k] + baseOffset);
+    player.playTrack(parallel([t]));
+  }
 };
 
+d3.select("#layout")
+  .selectAll("button")
+  .data([
+    { label: "left",  offset: -2 },
+    { label: "right", offset:  2 },
+    { label: "up",    offset:  1 },
+    { label: "down",  offset: -1 },
+  ]).enter()
+  .append("button")
+  .text(d => d.label)
+  .on("click", d => {
+    baseOffset += d.offset;
+    updateKeys();
+  });
 
 let harpejjiButtons = [];
 let xScale = d3.scaleLinear().domain([0, 12]).range([0, 600]);
@@ -118,7 +143,7 @@ for (let x = 0; x < 12; ++x) {
   for (let y = 0; y < 12; ++y) {
     harpejjiButtons.push({
       x, y,
-      key: 36 + 2 * x + y
+      key: 2 * x + y
     });
   }
 }
@@ -128,34 +153,41 @@ d3.select("#harpejji-board")
   .data(harpejjiButtons)
   .enter()
   .append("div")
-  .style("position", "absolute")
-  .style("width", 48)
-  .style("height", 48)
-  .style("top", d => `${yScale(d.y) - 50}px`)
-  .style("left", d => `${xScale(d.x)}px`)
-  .style("border", "1px solid lightgray")
-  .style("background-color", d => {
-    let which = (d.key - 4) % 12;
-    let blackKeys = {
-      1: true,
-      3: true,
-      6: true,
-      8: true,
-      10: true
-    };
-    if (blackKeys[which]) {
-      return "black";
-    } else {
-      return "white";
-    }
-  })
   .on("mousedown", d => {
-    player.playTrack(parallel([instrument3(d.key)]));
+    player.playTrack(parallel([instrument3(d.key + baseOffset)]));
   })
-  .filter(d => ((d.key - 4) % 12 === 0))
-  .append("span").text("C")
 ;
-  
+
+function updateKeys() {
+  let sel = d3.select("#harpejji-board")
+    .selectAll("div")
+    .style("position", "absolute")
+    .style("width", 48)
+    .style("height", 48)
+    .style("top", d => `${yScale(d.y) - 50}px`)
+    .style("left", d => `${xScale(d.x)}px`)
+    .style("border", "1px solid lightgray")
+    .style("background-color", d => {
+      let which = (d.key + baseOffset - 4) % 12;
+      let blackKeys = {
+        1: true,
+        3: true,
+        6: true,
+        8: true,
+        10: true
+      };
+      if (blackKeys[which]) {
+        return "black";
+      } else {
+        return "white";
+      }
+    });
+
+  sel.selectAll("span").remove();
+  sel.filter(d => ((d.key + baseOffset - 4) % 12 === 0))
+    .append("span").text("C");
+}
+updateKeys();
 
 // var xScale = d3.scaleLinear().domain([-10, 10]).range([0, 960]);
 
