@@ -155,6 +155,7 @@ d3.select("#harpejji-board")
   .append("div")
   .on("mousedown", d => {
     player.playTrack(parallel([instrument3(d.key + baseOffset)]));
+    d3.select("#latest-key").text(d.key + baseOffset);
   })
 ;
 
