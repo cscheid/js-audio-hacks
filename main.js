@@ -24,6 +24,14 @@ import { playPppppp } from "./pppppp.js";
 
 import { playPocketCalculator } from "./pocketCalculator.js";
 
+import {
+  instrument1,
+  instrument2,
+  instrument3,
+  instrument4,
+  instrument5,
+} from "./instruments.js";
+
 //////////////////////////////////////////////////////////////////////////////
 
 d3.select("#start")
@@ -33,56 +41,6 @@ d3.select("#start")
     let player = makePlayer();
     window.player = player;
   });
-
-export function instrument1(key) {
-  return baseTrack(
-    sine(notes[key])
-      .then(gain(0.5))
-      .then(expFadeOut2At(0, 10))
-      .then(expFadeInAt(0, 100)),
-    1,
-  );
-}
-
-export function instrument2(key) {
-  return baseTrack(
-    sawTooth(notes[key])
-      .then(gain(0.5))
-      .then(expFadeOut2At(0, 10))
-      .then(expFadeInAt(0, 50)),
-    1,
-  );
-}
-
-export function instrument3(key) {
-  return baseTrack(
-    triangle(notes[key])
-      .then(gain(0.5))
-      .then(expFadeOut2At(0, 10))
-      .then(expFadeInAt(0, 50)),
-    1,
-  );
-}
-
-export function instrument4(key) {
-  return baseTrack(
-    square(notes[key])
-      .then(gain(0.5))
-      .then(expFadeOut2At(0, 10))
-      .then(expFadeInAt(0, 50)),
-    1,
-  );
-}
-
-export function instrument5(key) {
-  return baseTrack(
-    inverseSawTooth(notes[key])
-      .then(gain(0.5))
-      .then(expFadeOut2At(0, 10))
-      .then(expFadeInAt(0, 50)),
-    1,
-  );
-}
 
 //////////////////////////////////////////////////////////////////////////////
 // var f2 = all([instrument1("D"), instrument1("Gb"), instrument1("A")]);

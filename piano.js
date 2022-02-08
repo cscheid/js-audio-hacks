@@ -7,7 +7,7 @@ import * as d3 from "https://cdn.skypack.dev/d3";
 
 import { parallel } from "./track.js";
 
-import { instrument2 } from "./main.js";
+import { instrument2 } from "./instruments.js";
 
 var pianoKeys = [
   { "note": 28 - 12, "kind": "white", "x": -7 - 7, "y": 0 },
@@ -100,7 +100,6 @@ var miniPianoKeys = {
 };
 
 document.onkeydown = function (event) {
-  console.log(event);
   var k = event.key.toLocaleLowerCase();
   if (miniPianoKeys[k] === undefined) {
     return;
@@ -140,3 +139,19 @@ d3.select("#piano")
   .attr("height", (d) => d.kind == "white" ? whiteKeyHeight : blackKeyHeight)
   .attr("width", (d) => d.kind == "white" ? whiteKeyWidth : blackKeyWidth)
   .on("mousedown", (e, d) => player.playTrack(parallel([instrument2(d.note)])));
+
+export function makePiano(ondown) {
+  d3.select("#piano")
+    .selectAll("rect")
+    .on("mousedown", (e, d) => {
+      ondown(d.note);
+    });
+
+  document.onkeydown = (e) => {
+    var k = e.key.toLocaleLowerCase();
+    if (miniPianoKeys[k] === undefined) {
+      return;
+    }
+    ondown(miniPianoKeys[k]);
+  };
+}
