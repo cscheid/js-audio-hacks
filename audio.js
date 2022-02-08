@@ -1,17 +1,21 @@
+/*global AudioContext */
+
+import vegaEmbed from 'https://cdn.skypack.dev/vega-embed';
+
 //////////////////////////////////////////////////////////////////////////////
 // softeng nonsense
 
 Float32Array.prototype.toArray = function(i, j) {
-  var result = new Array(j - i);
+  const result = new Array(j - i);
   for (var ixr = 0; i<j; ++i, ++ixr) {
     result[ixr] = this[i];
   }
   return result;  
 };
 
-function getAudioContext()
+export function getAudioContext()
 {
-  var context;    // Audio context
+  let context;    // Audio context
 
   if (!window.AudioContext) {
     if (!window.webkitAudioContext) {
@@ -67,7 +71,7 @@ function getAudioContext()
 //////////////////////////////////////////////////////////////////////////////
 // player
 
-function makePlayer()
+export function makePlayer()
 {
   var ctx = getAudioContext();
 

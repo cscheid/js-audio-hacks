@@ -1,11 +1,11 @@
-/*global silenceAt */
+import { silenceAt } from "./wave.js";
 
 //////////////////////////////////////////////////////////////////////////////
 // tracks
 // a track has a beginning and an end time and can render its own samples with
 // a function that will zero out all samples outside its window
 
-function sequence(tracks)
+export function sequence(tracks)
 {
   var track_origins   = tracks.map(track => track.window[0]);
   var track_durations = tracks.map(track => track.window[1] - track.window[0]);
@@ -47,7 +47,7 @@ function sequence(tracks)
   };
 }
 
-function parallel(tracks)
+export function parallel(tracks)
 {
   var min = Math.min.apply(null, tracks.map(track => track.window[0]));
   var max = Math.max.apply(null, tracks.map(track => track.window[1]));
@@ -65,7 +65,7 @@ function parallel(tracks)
   };
 }
 
-function baseTrack(f, duration)
+export function baseTrack(f, duration)
 {
   return {
     window: [0, duration],
@@ -79,7 +79,7 @@ function baseTrack(f, duration)
   };
 }
 
-function delay(track, amount)
+export function delay(track, amount)
 {
   return {
     window: [track.window[0] + amount, track.window[1] + amount],
@@ -90,12 +90,12 @@ function delay(track, amount)
   };
 }
 
-function overlappingSeq(tracks, wait)
+export function overlappingSeq(tracks, wait)
 {
   return parallel(tracks.map((track,i) => delay(track, i * wait)));
 }
 
-function seqDelays(tracks)
+export function seqDelays(tracks)
 {
   var wait = 0;
   return parallel(tracks.map(track => {

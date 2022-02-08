@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Music!
 
-var noteDict = [
+export const noteDict = [
   { number: 108, freq: 7902.133 },
   { number: 107, freq: 7458.620 },
   { number: 106, freq: 7040.000 },
@@ -101,13 +101,13 @@ var noteDict = [
   { number: 3, freq: 30.86771 },
   { number: 2, freq: 29.13524 },
   { number: 1, freq: 27.50000 }, // first key on piano
-  { number: 0, freq: 25.95654 } // not really on piano
+  { number: 0, freq: 25.95654 }, // not really on piano
 ];
 
-var notes = new Float32Array(109);
-noteDict.forEach(n => notes[n.number] = n.freq);
+export const notes = new Float32Array(109);
+noteDict.forEach((n) => notes[n.number] = n.freq);
 
-baseKeyboard = {
+export const baseKeyboard = {
   "C": 40,
   "Db": 41,
   "D": 42,
@@ -119,5 +119,5 @@ baseKeyboard = {
   "Ab": 48,
   "A": 49,
   "Bb": 50,
-  "B": 51
+  "B": 51,
 };
